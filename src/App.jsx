@@ -1,6 +1,6 @@
 import "./App.css";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function App() {
   const [isStart, setIsStart] = useState(false);
@@ -9,26 +9,54 @@ export default function App() {
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
 
+  const [timerId, setTimerId] = useState(0);
+
   const handleStart = () => {
     setIsStart(true);
   };
 
-  const handleReset=()=>{
+  const handleReset = () => {
     setIsStart(false);
-  }
+  };
 
-  const handleInput=(e)=>{
-    const value=parseInt(e.target.value);
-    const id=e.target.id;
-    if(id==='hours'){
+  const handleInput = (e) => {
+    const value = parseInt(e.target.value);
+    const id = e.target.id;
+    if (id === "hours") {
       setHours(value);
-    }else if(id==='minutes'){
+    } else if (id === "minutes") {
       setMinutes(value);
-    }else{
+    } else {
       setSeconds(value);
+    }
+  };
+
+  const runTimer=(sec,min,hr,tid)=>{
+    if(sec>0){
+      setSeconds((s)=>s-1);
+    }else if(sec===0 && min>0){
+      setMinutes((m)=>m-1);
+      setSeconds(59);
+    }else{
+      setHours((h)=>h-1);
+      setMinutes(59);
+      setSeconds(59);
     }
   }
 
+  useEffect(() => {
+    let tid;
+    if (isStart) {
+      tid = setInterval(() => {
+        runTimer(seconds,minutes,hours,tid)
+      }, 1000);
+      setTimerId(tid);
+    }
+
+    return()=>{
+      clearInterval(tid);
+    }
+  }, [isStart, hours, minutes, seconds]);
 
   return (
     <div className="App">
@@ -50,15 +78,17 @@ export default function App() {
       {isStart && (
         <div className="show-container">
           <div className="timer-box">
-            <div>10</div>
+            <div>{hours<10?`0${hours}`:hours}</div>
             <span>:</span>
-            <div>10</div>
+            <div>{minutes<10?`0${minutes}`:minutes}</div>
             <span>:</span>
-            <div>10</div>
+            <div>{seconds<10?`0${seconds}`:seconds}</div>
           </div>
           <div className="action-box">
             <button className="timer-button">Pause</button>
-            <button className="timer-button" onClick={handleReset}>Reset</button>
+            <button className="timer-button" onClick={handleReset}>
+              Reset
+            </button>
           </div>
         </div>
       )}
