@@ -22,8 +22,16 @@ export default function App() {
     }
   };
 
+  const resetTimer=()=>{
+     setHours(0);
+      setMinutes(0);
+      setSeconds(0);
+      clearInterval(timerId);
+  }
+
   const handleReset = () => {
     setIsStart(false);
+   resetTimer();
   };
 
   const handlePause = () => {
@@ -61,11 +69,10 @@ export default function App() {
     }
 
     if (sec === 0 && min === 0 && hr === 0) {
-      setHours(0);
-      setMinutes(0);
-      setSeconds(0);
-      clearInterval(tid);
+     handleReset();
       alert("Timer finished!");
+      clearInterval(tid);
+      return;
     }
   };
 
