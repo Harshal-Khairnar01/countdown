@@ -1,3 +1,4 @@
+import toast, { Toaster } from "react-hot-toast";
 import "./App.css";
 
 import React, { useEffect, useState } from "react";
@@ -15,7 +16,8 @@ export default function App() {
 
   const handleStart = () => {
     if (hours < 0 || minutes < 0 || seconds <= 0) {
-      alert("Invalid Input");
+      // alert("Invalid Input");
+      toast.error("Invalid Input!");
       return;
     } else {
       setIsStart(true);
@@ -71,8 +73,9 @@ export default function App() {
     if (sec === 0 && min === 0 && hr === 0) {
       const audio = new Audio("/timer-finished.mp3");
       audio.play();
-    resetTimer();
+      resetTimer();
       // alert("Timer finished!");
+      toast.success("Timer Finished!")
       clearInterval(tid);
       return;
     }
@@ -94,50 +97,65 @@ export default function App() {
 
   return (
     <div className="container">
+      <Toaster />
       <div className="wrapper">
-          <h1 className=" head">Countdown Timer</h1>
+        <h1 className=" head">Countdown</h1>
 
-      {!isStart && (
-        <div className=" inputContainer">
-          <div className=" input-box">
-            <input type="number" onChange={handleInput} id="hours" placeholder="HH" />
-            <input type="number" onChange={handleInput} id="minutes" placeholder="MM" />
-            <input type="number" onChange={handleInput} id="seconds" placeholder="SS" />
-          </div>
-          <button onClick={handleStart} className=" timer-button">
-            Start
-          </button>
-        </div>
-      )}
-
-      {isStart && (
-        <div className="show-container">
-          <div className="timer-box">
-            <div>{hours < 10 ? `0${hours}` : hours}</div>
-            <span>:</span>
-            <div>{minutes < 10 ? `0${minutes}` : minutes}</div>
-            <span>:</span>
-            <div>{seconds < 10 ? `0${seconds}` : seconds}</div>
-          </div>
-          <div className="action-box">
-            {!isPaused && (
-              <button className="timer-button" onClick={handlePause}>
-                Pause
-              </button>
-            )}
-            {isPaused && (
-              <button className="timer-button" onClick={handleResume}>
-                Resume
-              </button>
-            )}
-            <button className="timer-button" onClick={handleReset}>
-              Reset
+        {!isStart && (
+          <div className=" inputContainer">
+            <div className=" input-box">
+              <input
+                type="number"
+                onChange={handleInput}
+                id="hours"
+                placeholder="HH"
+              />
+              <input
+                type="number"
+                onChange={handleInput}
+                id="minutes"
+                placeholder="MM"
+              />
+              <input
+                type="number"
+                onChange={handleInput}
+                id="seconds"
+                placeholder="SS"
+              />
+            </div>
+            <button onClick={handleStart} className=" timer-button">
+              Start
             </button>
           </div>
-        </div>
-      )}
+        )}
+
+        {isStart && (
+          <div className="show-container">
+            <div className="timer-box">
+              <div>{hours < 10 ? `0${hours}` : hours}</div>
+              <span>:</span>
+              <div>{minutes < 10 ? `0${minutes}` : minutes}</div>
+              <span>:</span>
+              <div>{seconds < 10 ? `0${seconds}` : seconds}</div>
+            </div>
+            <div className="action-box">
+              {!isPaused && (
+                <button className="timer-button" onClick={handlePause}>
+                  Pause
+                </button>
+              )}
+              {isPaused && (
+                <button className="timer-button" onClick={handleResume}>
+                  Resume
+                </button>
+              )}
+              <button className="timer-button" onClick={handleReset}>
+                Reset
+              </button>
+            </div>
+          </div>
+        )}
       </div>
-    
     </div>
   );
 }
