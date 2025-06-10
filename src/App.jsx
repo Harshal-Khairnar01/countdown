@@ -22,16 +22,16 @@ export default function App() {
     }
   };
 
-  const resetTimer=()=>{
-     setHours(0);
-      setMinutes(0);
-      setSeconds(0);
-      clearInterval(timerId);
-  }
+  const resetTimer = () => {
+    setHours(0);
+    setMinutes(0);
+    setSeconds(0);
+    clearInterval(timerId);
+  };
 
   const handleReset = () => {
     setIsStart(false);
-   resetTimer();
+    resetTimer();
   };
 
   const handlePause = () => {
@@ -39,10 +39,10 @@ export default function App() {
     clearInterval(timerId);
   };
 
-  const handleResume=()=>{
+  const handleResume = () => {
     setIsPaused(false);
-    runTimer(seconds,minutes,hours)
-  }
+    runTimer(seconds, minutes, hours);
+  };
 
   const handleInput = (e) => {
     const value = parseInt(e.target.value);
@@ -69,8 +69,10 @@ export default function App() {
     }
 
     if (sec === 0 && min === 0 && hr === 0) {
-     handleReset();
-      alert("Timer finished!");
+      const audio = new Audio("/timer-finished.mp3");
+      audio.play();
+    resetTimer();
+      // alert("Timer finished!");
       clearInterval(tid);
       return;
     }
@@ -91,15 +93,16 @@ export default function App() {
   }, [isStart, hours, minutes, seconds]);
 
   return (
-    <div className="App">
-      <h1>Countdown Timer</h1>
+    <div className="container">
+      <div className="wrapper">
+          <h1 className=" head">Countdown Timer</h1>
 
       {!isStart && (
-        <div className=" input-container">
+        <div className=" inputContainer">
           <div className=" input-box">
-            <input onChange={handleInput} id="hours" placeholder="HH" />
-            <input onChange={handleInput} id="minutes" placeholder="HH" />
-            <input onChange={handleInput} id="seconds" placeholder="HH" />
+            <input type="number" onChange={handleInput} id="hours" placeholder="HH" />
+            <input type="number" onChange={handleInput} id="minutes" placeholder="MM" />
+            <input type="number" onChange={handleInput} id="seconds" placeholder="SS" />
           </div>
           <button onClick={handleStart} className=" timer-button">
             Start
@@ -133,6 +136,8 @@ export default function App() {
           </div>
         </div>
       )}
+      </div>
+    
     </div>
   );
 }
